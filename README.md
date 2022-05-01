@@ -24,7 +24,7 @@ Dlib and OpenCV libraries are adopted instead of the HarrCascades technique as i
 
 
 ## Running the code
-In Windows just double click de file `main_dlib.py` or execute in the console the following to run the dlib version. 
+In Windows just double click the file `main_dlib.py` or execute in the console using the following. 
 
 
 ```
