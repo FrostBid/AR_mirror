@@ -1,4 +1,4 @@
-# AR mirror for studio group 1
+# AR mirror
 ## Credits
 
 * Forked and modified from https://github.com/charlielito/snapchat-filters-opencv
