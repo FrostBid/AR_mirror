@@ -136,7 +136,7 @@ def get_face_boundbox(points, face_part):
 
 
 # Principal Loop where openCV (magic) ocurs
-def cvloop(run_event, read_camera=0, virtual_camera=0):
+def cvloop(run_event, read_camera=4, virtual_camera=4):
     global panelA
     global SPRITES
 
@@ -190,35 +190,37 @@ def cvloop(run_event, read_camera=0, virtual_camera=0):
                 shape[66][1] - shape[62][1]
             ) >= 10  # y coordiantes of landmark points of lips
 
-            # hat condition
+            # hat1 condition
             if SPRITES[0]:
-                apply_sprite(image, "./sprites/hat.png", w, x, y, incl)
+                apply_sprite(image, "./sprites/berethat.png", w, x, y, incl)
 
             # mustache condition
-            if SPRITES[1]:
-                (x1, y1, w1, h1) = get_face_boundbox(shape, 6)
-                apply_sprite(image, "./sprites/mustache.png", w1, x1, y1, incl)
+            if SPRITES[2]:
+                (x3, y3, _, h3) = get_face_boundbox(shape, 1)
+                apply_sprite(
+                    image, "./sprites/bglasses.png", w, x, y3, incl, ontop=False
+                )
 
             # glasses condition
             if SPRITES[3]:
                 (x3, y3, _, h3) = get_face_boundbox(shape, 1)
                 apply_sprite(
-                    image, "./sprites/glasses.png", w, x, y3, incl, ontop=False
+                    image, "./sprites/yglasses.png", w, x, y3, incl, ontop=False
                 )
 
-            # flies condition
-            if SPRITES[2]:
-                # to make the "animation" we read each time a different image of that folder
-                # the images are placed in the correct order to give the animation impresion
-                apply_sprite(image, dir_ + flies[i], w, x, y, incl)
-                i += 1
-                i = (
-                    0 if i >= len(flies) else i
-                )  # when done with all images of that folder, begin again
+            if SPRITES[4]:
+                (x3, y3, _, h3) = get_face_boundbox(shape, 1)
+                apply_sprite(
+                    image, "./sprites/rglasses.png", w, x, y3, incl, ontop=False
+                )
+
+            # hat2 condition
+            if SPRITES[1]:
+                apply_sprite(image, "./sprites/cowboyhat.png", w, x, y, incl)
 
             # doggy condition
             (x0, y0, w0, h0) = get_face_boundbox(shape, 6)  # bound box of mouth
-            if SPRITES[4]:
+            if SPRITES[5]:
                 (x3, y3, w3, h3) = get_face_boundbox(shape, 5)  # nose
                 apply_sprite(
                     image, "./sprites/doggy_nose.png", w3, x3, y3, incl, ontop=False
@@ -236,11 +238,11 @@ def cvloop(run_event, read_camera=0, virtual_camera=0):
                         incl,
                         ontop=False,
                     )
-            else:
+            '''else:
                 if is_mouth_open:
                     apply_sprite(
                         image, "./sprites/rainbow.png", w0, x0, y0, incl, ontop=False
-                    )
+                    )'''
 
         # OpenCV represents image as BGR; PIL but RGB, we need to change the chanel order
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -280,20 +282,23 @@ imgicon = PhotoImage(file=os.path.join(this_dir, "imgs", "icon.gif"))
 root.tk.call("wm", "iconphoto", root._w, imgicon)
 
 ##Create 5 buttons and assign their corresponding function to active sprites
-btn1 = Button(root, text="Hat", command=lambda: put_sprite(0))
+btn1 = Button(root, text="Beret Hat", command=lambda: put_sprite(0))
 btn1.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
-btn2 = Button(root, text="Mustache", command=lambda: put_sprite(1))
+btn2 = Button(root, text="Cowboy hat", command=lambda: put_sprite(1))
 btn2.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
-btn3 = Button(root, text="Flies", command=lambda: put_sprite(2))
+btn3 = Button(root, text="Sunglasses", command=lambda: put_sprite(2))
 btn3.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
-btn4 = Button(root, text="Glasses", command=lambda: put_sprite(3))
+btn4 = Button(root, text="Yellow Glasses", command=lambda: put_sprite(3))
 btn4.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
-btn5 = Button(root, text="Doggy", command=lambda: put_sprite(4))
+btn5 = Button(root, text="Red Glasses", command=lambda: put_sprite(4))
 btn5.pack(side="top", fill="both", expand="no", padx="5", pady="5")
+
+btn6 = Button(root, text="Doggy", command=lambda: put_sprite(5))
+btn6.pack(side="top", fill="both", expand="no", padx="5", pady="5")
 
 
 # Create the panel where webcam image will be shown
@@ -307,8 +312,9 @@ SPRITES = [
     0,
     0,
     0,
+    0,
 ]  # hat, mustache, flies, glasses, doggy -> 1 is visible, 0 is not visible
-BTNS = [btn1, btn2, btn3, btn4, btn5]
+BTNS = [btn1, btn2, btn3, btn4, btn5, btn6]
 
 
 # Creates a thread where the magic ocurs
